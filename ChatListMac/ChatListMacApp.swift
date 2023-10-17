@@ -21,13 +21,19 @@ struct ChatListMacApp: App {
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     static private(set) var instance: AppDelegate!
+    
     lazy var statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     let menu = ApplicationMenu()
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         AppDelegate.instance = self
-        statusBarItem.button?.image = NSImage(symbolName: "trash.fill", variableValue: 0)
-        statusBarItem.button?.imagePosition = .imageLeading
+        
+        if let statusButton = statusBarItem.button {
+            //statusButton.image = NSImage(imageLiteralResourceName: "icon_png")
+            statusButton.image = NSImage(systemSymbolName: "square.and.arrow.up", accessibilityDescription: "icon")
+        }
+        
+        //statusBarItem.button?.imagePosition = .imageLeading
         statusBarItem.menu = menu.createMenu()
     }
 }

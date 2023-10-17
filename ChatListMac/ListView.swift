@@ -18,7 +18,7 @@ struct ListView: View {
     @State private var chatLabel = ""
     @State private var chatUrl = ""
     
-    @State private var flagNew: Bool = false
+    @State private var flagNew: Bool = true //false
 
     @Environment(\.openURL) var openURL
     
@@ -39,6 +39,8 @@ struct ListView: View {
                     .font(.title2)
                     .onTapGesture {
                         flagNew = true
+                        chatLabel = ""
+                        chatUrl = ""
                         print("Add")
                     }
             }
@@ -50,14 +52,27 @@ struct ListView: View {
                     VStack(spacing: 0) {
                         TextField("Name", text: $chatLabel)
                             .foregroundColor(.primary)
+                            .background(.clear)
                         TextField("URL", text: $chatUrl)
                             .foregroundColor(.primary)
+                            .background(.clear)
                     }
-                    Image(systemName: "arrowshape.forward.circle").foregroundColor(Color.secondary.opacity(0.5))
+                    Image(systemName: "arrowshape.forward.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 20)
+                        .foregroundColor(Color.secondary.opacity(0.5))
                         .onTapGesture {
-                            let addChat = ChatsInfos(nameTitle: chatLabel, urlLink: chatUrl)
-                            chats.append(addChat)
+                            
+                            if chatLabel.isEmpty  || chatUrl.isEmpty {
+                                chatLabel = ""
+                                chatUrl = ""
+                            } else {
+                                let addChat = ChatsInfos(nameTitle: chatLabel, urlLink: chatUrl)
+                                chats.append(addChat)
+                            }
                             flagNew = false
+
                         }
                 }
                 .padding(.top, 1)
@@ -78,20 +93,13 @@ struct ListView: View {
                                 openURLInExternalBrowser("https://www.google.com")
                                 print(chats[index].urlLink)
                             }
-                        Text(chats[index].urlLink)
-                            .foregroundColor(Color.primary)
-                            .font(.caption)
-                            .onTapGesture {
-                                openURLInExternalBrowser("https://www.google.com")
-                                print(chats[index].urlLink)
-                            }
-                        
                         Spacer()
-                        Image(systemName: "trash").foregroundColor(Color.secondary.opacity(0.5))
+                        Image(systemName: "trash.fill").foregroundColor(Color.secondary.opacity(0.5))
                             .onTapGesture {
                                 print("Delete \(index)")
                                 chats.remove(at: index)
                             }
+                            .foregroundColor(.secondary)
                     }
                     .padding(.top, 1)
                 }
