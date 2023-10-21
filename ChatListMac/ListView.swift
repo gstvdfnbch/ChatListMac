@@ -24,29 +24,7 @@ struct ListView: View {
     
     let managerData = UserDefaultsManager()
     
-    func transformToValidURL(from string: String, completion: @escaping (String) -> Void) {
-        var urlString = string.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        // Se não contém "www.", adicione "http://"
-        if !urlString.contains("www.") {
-            urlString = "http://" + urlString
-        }
-        
-        // Se não tem um domínio conhecido (.com, .br, etc.), adicione ".com"
-        let knownDomains = [".com", ".br"] // Adicione outros domínios conforme necessário
-        if !knownDomains.contains(where: urlString.hasSuffix) {
-            urlString += ".com"
-        }
-        
-        // Verifica a validade da URL
-        validateURL(urlString) { isValid in
-            if isValid {
-                completion(urlString)
-            } else {
-                completion("http://www.google.com")
-            }
-        }
-    }
+
     
     func validateURL(_ urlString: String, completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: urlString) else {
@@ -75,12 +53,8 @@ struct ListView: View {
     
     func openURLInExternalBrowser(_ urlString: String) {
         
-        transformToValidURL(from: "example") { finalURL in
-            print(finalURL)
-            print("url valida!")
-            openURL(URL(string: finalURL)!)
-        }
-        
+        openURL(URL(string: urlString)!)
+
         
     }
     
@@ -108,24 +82,27 @@ struct ListView: View {
                             TextField("Título do site", text: $chatUrl)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .frame(maxWidth: .infinity)
-                          
+                            
                             TextField("Link completo", text: $chatLabel)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .frame(maxWidth: .infinity) // Tamanho máximo disponível
-                      
+                                .frame(maxWidth: .infinity)
                         }
                         VStack(spacing: 8){
                             Button(action: {
-                            }, label: {
+                            }) {
                                 Text("Salvar")
-                            })
+                                    .foregroundColor(.blue)
+                            }.opacity(0)
                             Button(action: {
+                                
                                 chats.append(ChatsInfos(nameTitle: chatLabel, urlLink: chatUrl))
-                                print("Botão Salvar pressionado!")
-                            }, label: {
+                                
+                                managerData.save(chats: chats)
+                            }) {
                                 Text("Salvar")
-                            })
-                        }// Espaçamento à esquerda do botão
+                                    .foregroundColor(.blue)
+                            }
+                        }
                     }
                 }
                 .padding(12)
@@ -137,7 +114,7 @@ struct ListView: View {
             
             VStack{
                 ScrollView {
-                VStack(spacing: 8){
+                    VStack(spacing: 4){
                         ForEach(0..<chats.count, id: \.self) { index in
                             HStack(spacing:8){
                                 VStack {
@@ -153,6 +130,8 @@ struct ListView: View {
                                         Spacer()
                                     }
                                 }
+                                Image(systemName: "ellipsis.circle")
+                                    .foregroundColor(.secondary)
                                 Button(action: {
                                     openURLInExternalBrowser(chats[index].urlLink)
                                 }, label: {
@@ -161,12 +140,14 @@ struct ListView: View {
                                 })
                                 
                             }
-                            Divider()
+                            .padding(8)
+                            .background(Color.black.opacity(0.1))
+                            .cornerRadius(8)
                             
                         }
                     }
                 }
-                .padding(12)
+                .padding(8)
             }
             .background(.background)
             .cornerRadius(8)
