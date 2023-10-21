@@ -21,8 +21,64 @@ struct ListView: View {
     
     let managerData = UserDefaultsManager()
     
+    func transformToValidURL(from string: String, completion: @escaping (String) -> Void) {
+        var urlString = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Se não contém "www.", adicione "http://"
+        if !urlString.contains("www.") {
+            urlString = "http://" + urlString
+        }
+        
+        // Se não tem um domínio conhecido (.com, .br, etc.), adicione ".com"
+        let knownDomains = [".com", ".br"] // Adicione outros domínios conforme necessário
+        if !knownDomains.contains(where: urlString.hasSuffix) {
+            urlString += ".com"
+        }
+        
+        // Verifica a validade da URL
+        validateURL(urlString) { isValid in
+            if isValid {
+                completion(urlString)
+            } else {
+                completion("http://www.google.com")
+            }
+        }
+    }
+
+    func validateURL(_ urlString: String, completion: @escaping (Bool) -> Void) {
+        guard let url = URL(string: urlString) else {
+            completion(false)
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "HEAD"  // Método HEAD é mais eficiente para essa verificação
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            guard let httpResponse = response as? HTTPURLResponse, error == nil else {
+                completion(false)
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+        
+        task.resume()
+    }
+    
     func openURLInExternalBrowser(_ urlString: String) {
-        openURL(URL(string: urlString)!)
+        
+        transformToValidURL(from: "example") { finalURL in
+            print(finalURL)
+            print("url valida!")
+            openURL(URL(string: finalURL)!)
+        }
+        
+        
     }
     
     func onAppearDataDeafult() {
@@ -101,7 +157,7 @@ struct ListView: View {
                         Text(chats[index].nameTitle)
                             .foregroundColor(Color.primary)
                             .onTapGesture {
-                                openURLInExternalBrowser("https://www.google.com")
+                                openURLInExternalBrowser(chats[index].urlLink)
                                 print(chats[index].urlLink)
                             }
                         Spacer()

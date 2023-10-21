@@ -30,7 +30,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         AppDelegate.instance = self
         
         if let statusButton = statusBarItem.button {
-            statusButton.image = NSImage(systemSymbolName: "square.and.arrow.up", accessibilityDescription: "icon")
+            statusButton.image = NSImage(named: NSImage.Name("iconMenuBar"))
+            //statusButton.image = NSImage(systemSymbolName: "square.and.arrow.up", accessibilityDescription: "icon")
         }
         
         //statusBarItem.button?.imagePosition = .imageLeading
