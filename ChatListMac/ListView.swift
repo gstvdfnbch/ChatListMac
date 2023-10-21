@@ -8,15 +8,18 @@
 import Foundation
 import SwiftUI
 
+
 struct ListView: View {
     
+    let paddingGSTV = 16
+    
     @State private var chats: [ChatsInfos] = []
-        
+    
     @State private var chatLabel = ""
     @State private var chatUrl = ""
     
     @State private var flagNew: Bool = false
-
+    
     @Environment(\.openURL) var openURL
     
     let managerData = UserDefaultsManager()
@@ -44,7 +47,7 @@ struct ListView: View {
             }
         }
     }
-
+    
     func validateURL(_ urlString: String, completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: urlString) else {
             completion(false)
@@ -90,98 +93,98 @@ struct ListView: View {
     }
     
     var body: some View {
-        VStack {
-            HStack{
-                Spacer()
-                Image(systemName: "plus.app")
-                    .foregroundColor(Color.accentColor)
-                    .font(.title2)
-                    .onTapGesture {
-                        flagNew = true
-                        chatLabel = ""
-                        chatUrl = ""
-                        print("Add")
-                    }
-                Image(systemName: "gearshape")
-                    .foregroundColor(Color.accentColor)
-                    .font(.title2)
-                    .onTapGesture {
-                        print("Config")
-                    }
-            }
+        VStack(spacing: 16){
             
-        
-            if flagNew {
-                HStack{
-                    VStack(spacing: 0) {
-                        TextField("Name", text: $chatLabel)
-                            .foregroundColor(.primary)
-                            .background(.clear)
-                        TextField("URL", text: $chatUrl)
-                            .foregroundColor(.primary)
-                            .background(.clear)
-                    }
-                    Image(systemName: "arrowshape.forward.circle")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 20)
-                        .foregroundColor(Color.secondary.opacity(0.5))
-                        .onTapGesture {
-                            
-                            if chatLabel.isEmpty  || chatUrl.isEmpty {
-                                chatLabel = ""
-                                chatUrl = ""
-                            } else {
-                                let addChat = ChatsInfos(nameTitle: chatLabel, urlLink: chatUrl)
-                                chats.append(addChat)
-                                
-                                managerData.save(chats: chats)
-                            }
-                            
-                            flagNew = false
-
-                        }
-                }
-                .padding(.top, 1)
-            }
-            
-            if chats.isEmpty {
-                Spacer()
-                Text("Nenhum link salvo")
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
-                Spacer()
-            } else {
-                ForEach(0..<chats.count, id: \.self) { index in
+            VStack{
+                VStack{
                     HStack{
-                        Text(chats[index].nameTitle)
-                            .foregroundColor(Color.primary)
-                            .onTapGesture {
-                                openURLInExternalBrowser(chats[index].urlLink)
-                                print(chats[index].urlLink)
-                            }
+                        Text("Criar novo link")
+                            .font(.title3)
+                            .bold()
                         Spacer()
-                        Image(systemName: "trash.fill").foregroundColor(Color.secondary.opacity(0.5))
-                            .onTapGesture {
-                                print("Delete \(index)")
-                                chats.remove(at: index)
-                                managerData.save(chats: chats)
-                            }
-                            .foregroundColor(.secondary)
                     }
-                    .padding(.top, 8)
+                    HStack(spacing: 8){
+                        VStack(spacing: 4){
+                            TextField("Título do site", text: $chatUrl)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .frame(maxWidth: .infinity)
+                          
+                            TextField("Link completo", text: $chatLabel)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .frame(maxWidth: .infinity) // Tamanho máximo disponível
+                      
+                        }
+                        VStack(spacing: 8){
+                            Button(action: {
+                            }, label: {
+                                Text("Salvar")
+                            })
+                            Button(action: {
+                                chats.append(ChatsInfos(nameTitle: chatLabel, urlLink: chatUrl))
+                                print("Botão Salvar pressionado!")
+                            }, label: {
+                                Text("Salvar")
+                            })
+                        }// Espaçamento à esquerda do botão
+                    }
                 }
+                .padding(12)
+                .cornerRadius(8)
             }
-            Spacer()
+            .background(.background)
+            .cornerRadius(8)
+            
+            
+            VStack{
+                ScrollView {
+                VStack(spacing: 8){
+                        ForEach(0..<chats.count, id: \.self) { index in
+                            HStack(spacing:8){
+                                VStack {
+                                    HStack{
+                                        Text(chats[index].nameTitle)
+                                            .font(.callout)
+                                        Spacer()
+                                    }
+                                    HStack{
+                                        Text(chats[index].urlLink)
+                                            .font(.callout)
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                    }
+                                }
+                                Button(action: {
+                                    openURLInExternalBrowser(chats[index].urlLink)
+                                }, label: {
+                                    Text("Abrir")
+                                        .padding(.vertical,4)
+                                })
+                                
+                            }
+                            Divider()
+                            
+                        }
+                    }
+                }
+                .padding(12)
+            }
+            .background(.background)
+            .cornerRadius(8)
+            .onAppear() {
+                self.onAppearDataDeafult()
+            }
         }
-        .padding(EdgeInsets.init(top: 8, leading: 16, bottom: 16, trailing: 16))
-        .onAppear() {
-            self.onAppearDataDeafult()
-        }
+        .padding(16)
+        
     }
+    
     
 }
 
+
+
+
+
 #Preview {
-    ListView().frame(width: 300,height: 200)
+    ListView().frame(width: 400,height: 300)
 }
