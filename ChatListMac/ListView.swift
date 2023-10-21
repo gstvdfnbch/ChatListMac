@@ -11,28 +11,31 @@ import SwiftUI
 struct ListView: View {
     
     @State private var chats: [ChatsInfos] = []
-    
-    @State private var isAppClosed = false
-    
-    
+        
     @State private var chatLabel = ""
     @State private var chatUrl = ""
     
-    @State private var flagNew: Bool = true //false
+    @State private var flagNew: Bool = false
 
     @Environment(\.openURL) var openURL
+    
+    let managerData = UserDefaultsManager()
     
     func openURLInExternalBrowser(_ urlString: String) {
         openURL(URL(string: urlString)!)
     }
     
+    func onAppearDataDeafult() {
+        if let loadedChats = managerData.load() {
+            print(loadedChats)
+            self.chats.removeAll()
+            self.chats.append(contentsOf: loadedChats)
+        }
+    }
+    
     var body: some View {
         VStack {
             HStack{
-                Text("Lista de Chats GPT")
-                    .font(.title3)
-                    .foregroundColor(Color.secondary)
-                    .bold()
                 Spacer()
                 Image(systemName: "plus.app")
                     .foregroundColor(Color.accentColor)
@@ -43,10 +46,15 @@ struct ListView: View {
                         chatUrl = ""
                         print("Add")
                     }
+                Image(systemName: "gearshape")
+                    .foregroundColor(Color.accentColor)
+                    .font(.title2)
+                    .onTapGesture {
+                        print("Config")
+                    }
             }
             
-            Divider()
-            
+        
             if flagNew {
                 HStack{
                     VStack(spacing: 0) {
@@ -70,7 +78,10 @@ struct ListView: View {
                             } else {
                                 let addChat = ChatsInfos(nameTitle: chatLabel, urlLink: chatUrl)
                                 chats.append(addChat)
+                                
+                                managerData.save(chats: chats)
                             }
+                            
                             flagNew = false
 
                         }
@@ -98,15 +109,19 @@ struct ListView: View {
                             .onTapGesture {
                                 print("Delete \(index)")
                                 chats.remove(at: index)
+                                managerData.save(chats: chats)
                             }
                             .foregroundColor(.secondary)
                     }
-                    .padding(.top, 1)
+                    .padding(.top, 8)
                 }
             }
             Spacer()
         }
         .padding(EdgeInsets.init(top: 8, leading: 16, bottom: 16, trailing: 16))
+        .onAppear() {
+            self.onAppearDataDeafult()
+        }
     }
     
 }

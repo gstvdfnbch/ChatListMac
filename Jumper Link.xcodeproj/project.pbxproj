@@ -16,13 +16,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7B350B132ADD6922005A049E /* Jumper Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Jumper Chat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B350B132ADD6922005A049E /* Jumper Link.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Jumper Link.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B350B162ADD6922005A049E /* ChatListMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListMacApp.swift; sourceTree = "<group>"; };
 		7B350B182ADD6922005A049E /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		7B350B1A2ADD6923005A049E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7B350B1D2ADD6923005A049E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7B350B242ADD6ADD005A049E /* ApplicationMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationMenu.swift; sourceTree = "<group>"; };
 		7B350B262ADD796E005A049E /* DataList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataList.swift; sourceTree = "<group>"; };
+		7BD4441F2ADEC2DC00501943 /* Jumper Chat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Jumper Chat.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +40,7 @@
 		7B350B0A2ADD6922005A049E = {
 			isa = PBXGroup;
 			children = (
+				7BD4441F2ADEC2DC00501943 /* Jumper Chat.entitlements */,
 				7B350B152ADD6922005A049E /* ChatListMac */,
 				7B350B142ADD6922005A049E /* Products */,
 			);
@@ -47,7 +49,7 @@
 		7B350B142ADD6922005A049E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7B350B132ADD6922005A049E /* Jumper Chat.app */,
+				7B350B132ADD6922005A049E /* Jumper Link.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -76,9 +78,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		7B350B122ADD6922005A049E /* Jumper Chat */ = {
+		7B350B122ADD6922005A049E /* Jumper Link */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7B350B212ADD6923005A049E /* Build configuration list for PBXNativeTarget "Jumper Chat" */;
+			buildConfigurationList = 7B350B212ADD6923005A049E /* Build configuration list for PBXNativeTarget "Jumper Link" */;
 			buildPhases = (
 				7B350B0F2ADD6922005A049E /* Sources */,
 				7B350B102ADD6922005A049E /* Frameworks */,
@@ -88,9 +90,9 @@
 			);
 			dependencies = (
 			);
-			name = "Jumper Chat";
+			name = "Jumper Link";
 			productName = ChatListMac;
-			productReference = 7B350B132ADD6922005A049E /* Jumper Chat.app */;
+			productReference = 7B350B132ADD6922005A049E /* Jumper Link.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -108,7 +110,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 7B350B0E2ADD6922005A049E /* Build configuration list for PBXProject "Jumper Chat" */;
+			buildConfigurationList = 7B350B0E2ADD6922005A049E /* Build configuration list for PBXProject "Jumper Link" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -121,7 +123,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7B350B122ADD6922005A049E /* Jumper Chat */,
+				7B350B122ADD6922005A049E /* Jumper Link */,
 			);
 		};
 /* End PBXProject section */
@@ -277,13 +279,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Jumper Chat.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"ChatListMac/Preview Content\"";
 				DEVELOPMENT_TEAM = J7JQJTT8YZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Char List";
+				INFOPLIST_KEY_CFBundleDisplayName = "Jumper Link";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -310,13 +313,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Jumper Chat.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"ChatListMac/Preview Content\"";
 				DEVELOPMENT_TEAM = J7JQJTT8YZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Char List";
+				INFOPLIST_KEY_CFBundleDisplayName = "Jumper Link";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -341,7 +345,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7B350B0E2ADD6922005A049E /* Build configuration list for PBXProject "Jumper Chat" */ = {
+		7B350B0E2ADD6922005A049E /* Build configuration list for PBXProject "Jumper Link" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7B350B1F2ADD6923005A049E /* Debug */,
@@ -350,7 +354,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7B350B212ADD6923005A049E /* Build configuration list for PBXNativeTarget "Jumper Chat" */ = {
+		7B350B212ADD6923005A049E /* Build configuration list for PBXNativeTarget "Jumper Link" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7B350B222ADD6923005A049E /* Debug */,
