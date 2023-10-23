@@ -7,12 +7,14 @@
 
 import Foundation
 import SwiftUI
-
+import Cocoa
 
 struct ListView: View {
     
     let paddingGSTV = 16
     
+    @State private var showMenu = false
+
     @State private var chats: [ChatsInfos] = []
     
     @State private var chatLabel = ""
@@ -24,7 +26,9 @@ struct ListView: View {
     
     let managerData = UserDefaultsManager()
     
-
+    var statusItem: NSStatusItem?
+    var menu: NSMenu?
+    
     
     func validateURL(_ urlString: String, completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: urlString) else {
@@ -53,8 +57,7 @@ struct ListView: View {
     
     func openURLInExternalBrowser(_ urlString: String) {
         
-        openURL(URL(string: urlString)!)
-
+//        openURL(URL(string: urlString)!)
         
     }
     
@@ -72,48 +75,64 @@ struct ListView: View {
             VStack{
                 VStack{
                     HStack{
+                        Image(systemName: "plus.circle.fill")
+                            .foregroundColor(.blue)
+                            
                         Text("Criar novo link")
                             .font(.title3)
                             .bold()
                         Spacer()
                     }
-                    HStack(spacing: 8){
-                        VStack(spacing: 4){
-                            TextField("Título do site", text: $chatUrl)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .frame(maxWidth: .infinity)
-                            
-                            TextField("Link completo", text: $chatLabel)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .frame(maxWidth: .infinity)
-                        }
-                        VStack(spacing: 8){
-                            Button(action: {
-                            }) {
-                                Text("Salvar")
-                                    .foregroundColor(.blue)
-                            }.opacity(0)
-                            Button(action: {
+                    .onTapGesture {
+                        chatUrl = ""
+                        chatLabel = ""
+                        flagNew.toggle()
+                    }
+                    
+                    
+                    if flagNew {
+                        HStack(spacing: 8){
+                            VStack(spacing: 4){
+                                TextField("Título do site", text: $chatUrl)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .frame(maxWidth: .infinity)
                                 
-                                chats.append(ChatsInfos(nameTitle: chatLabel, urlLink: chatUrl))
-                                
-                                managerData.save(chats: chats)
-                            }) {
-                                Text("Salvar")
-                                    .foregroundColor(.blue)
+                                TextField("Link completo", text: $chatLabel)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .frame(maxWidth: .infinity)
+                            }
+                            VStack(spacing: 8){
+                                Button(action: {
+                                }) {
+                                    Text("Salvar")
+                                        .foregroundColor(.blue)
+                                }.opacity(0)
+                                Button(action: {
+                                    flagNew = false
+                                    chats.append(ChatsInfos(nameTitle: chatLabel, urlLink: chatUrl))
+                                    managerData.save(chats: chats)
+                                    chatLabel = ""
+                                    chatUrl = ""
+                                    
+                                }) {
+                                    Text("Salvar")
+                                        .foregroundColor(.blue)
+                                }
                             }
                         }
+                        
+                        
                     }
                 }
                 .padding(12)
-                .cornerRadius(8)
+                    .cornerRadius(8)
             }
             .background(.background)
             .cornerRadius(8)
             
             
             VStack{
-                ScrollView {
+                ScrollView (showsIndicators: false){
                     VStack(spacing: 4){
                         ForEach(0..<chats.count, id: \.self) { index in
                             HStack(spacing:8){
@@ -130,18 +149,27 @@ struct ListView: View {
                                         Spacer()
                                     }
                                 }
+                                .onTapGesture {
+                                    openURLInExternalBrowser(chats[index].urlLink)
+                                    
+                                }
                                 Image(systemName: "ellipsis.circle")
                                     .foregroundColor(.secondary)
-                                Button(action: {
-                                    openURLInExternalBrowser(chats[index].urlLink)
-                                }, label: {
-                                    Text("Abrir")
-                                        .padding(.vertical,4)
-                                })
-                                
+                                    .onTapGesture {
+                                        showMenu.toggle()
+                                    }
+                                    .popover(isPresented: $showMenu, arrowEdge: .bottom, content: {
+                                        MenuView()
+                                    })
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.secondary)
+                                    .onTapGesture {
+                                        openURLInExternalBrowser(chats[index].urlLink)
+                                    }
+
                             }
                             .padding(8)
-                            .background(Color.black.opacity(0.1))
+                            .background(Color.black.opacity(0.05))
                             .cornerRadius(8)
                             
                         }
@@ -161,9 +189,6 @@ struct ListView: View {
     
     
 }
-
-
-
 
 
 #Preview {

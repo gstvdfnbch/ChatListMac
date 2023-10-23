@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7B034F702AE6C1300021BDB5 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B034F6F2AE6C1300021BDB5 /* MenuView.swift */; };
 		7B350B172ADD6922005A049E /* ChatListMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B350B162ADD6922005A049E /* ChatListMacApp.swift */; };
 		7B350B192ADD6922005A049E /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B350B182ADD6922005A049E /* ListView.swift */; };
 		7B350B1B2ADD6923005A049E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B350B1A2ADD6923005A049E /* Assets.xcassets */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7B034F6F2AE6C1300021BDB5 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		7B350B132ADD6922005A049E /* Jumplink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Jumplink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B350B162ADD6922005A049E /* ChatListMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListMacApp.swift; sourceTree = "<group>"; };
 		7B350B182ADD6922005A049E /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				7B350B1A2ADD6923005A049E /* Assets.xcassets */,
 				7B350B1C2ADD6923005A049E /* Preview Content */,
 				7B350B262ADD796E005A049E /* DataList.swift */,
+				7B034F6F2AE6C1300021BDB5 /* MenuView.swift */,
 			);
 			path = ChatListMac;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B034F702AE6C1300021BDB5 /* MenuView.swift in Sources */,
 				7B350B192ADD6922005A049E /* ListView.swift in Sources */,
 				7B350B252ADD6ADD005A049E /* ApplicationMenu.swift in Sources */,
 				7B350B172ADD6922005A049E /* ChatListMacApp.swift in Sources */,
