@@ -14,10 +14,10 @@ struct MenuView: View {
             HStack{
                 Image(systemName: "pencil")
                     .font(.headline)
-                    .padding(4)
-                    .onTapGesture {
-                        print("pencil")
-                    }
+            }
+            .padding(4)
+            .onTapGesture {
+                print("dsodmpas")
             }
             HStack{
                 Image(systemName: "trash")
@@ -30,4 +30,9 @@ struct MenuView: View {
         }
         .padding(8)
     }
+}
+
+
+#Preview {
+    MenuView()
 }

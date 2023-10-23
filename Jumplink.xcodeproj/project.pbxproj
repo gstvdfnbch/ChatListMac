@@ -59,12 +59,11 @@
 		7B350B152ADD6922005A049E /* ChatListMac */ = {
 			isa = PBXGroup;
 			children = (
+				7B350B1C2ADD6923005A049E /* Preview Content */,
+				7B350B262ADD796E005A049E /* DataList.swift */,
 				7B350B162ADD6922005A049E /* ChatListMacApp.swift */,
 				7B350B242ADD6ADD005A049E /* ApplicationMenu.swift */,
 				7B350B182ADD6922005A049E /* ListView.swift */,
-				7B350B1A2ADD6923005A049E /* Assets.xcassets */,
-				7B350B1C2ADD6923005A049E /* Preview Content */,
-				7B350B262ADD796E005A049E /* DataList.swift */,
 				7B034F6F2AE6C1300021BDB5 /* MenuView.swift */,
 			);
 			path = ChatListMac;
@@ -73,6 +72,7 @@
 		7B350B1C2ADD6923005A049E /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				7B350B1A2ADD6923005A049E /* Assets.xcassets */,
 				7B350B1D2ADD6923005A049E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";

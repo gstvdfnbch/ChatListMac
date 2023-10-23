@@ -20,6 +20,9 @@ struct ListView: View {
     @State private var chatLabel = ""
     @State private var chatUrl = ""
     
+    @FocusState private var isFocusedLabel: Bool
+    @FocusState private var isFocusedUrl: Bool    
+    
     @State private var flagNew: Bool = false
     
     @Environment(\.openURL) var openURL
@@ -57,13 +60,14 @@ struct ListView: View {
     
     func openURLInExternalBrowser(_ urlString: String) {
         
-//        openURL(URL(string: urlString)!)
+        if let urlDone = URL(string: urlString) {
+            openURL(urlDone)
+        }
         
     }
     
     func onAppearDataDeafult() {
         if let loadedChats = managerData.load() {
-            print(loadedChats)
             self.chats.removeAll()
             self.chats.append(contentsOf: loadedChats)
         }
@@ -71,7 +75,6 @@ struct ListView: View {
     
     var body: some View {
         VStack(spacing: 16){
-            
             VStack{
                 VStack{
                     HStack{
@@ -88,17 +91,26 @@ struct ListView: View {
                         chatLabel = ""
                         flagNew.toggle()
                     }
-                    
-                    
                     if flagNew {
                         HStack(spacing: 8){
                             VStack(spacing: 4){
-                                TextField("Título do site", text: $chatUrl)
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                    .frame(maxWidth: .infinity)
                                 
-                                TextField("Link completo", text: $chatLabel)
+                                TextField("Título do site", text: $chatUrl, onCommit: {
+                                    isFocusedLabel = false
+                                    isFocusedUrl = true
+                                })
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .focused($isFocusedLabel)
+                                .frame(maxWidth: .infinity)
+                                
+                                
+                                
+                                TextField("Link completo", text: $chatLabel, onCommit: {
+                                    isFocusedLabel = true
+                                    isFocusedUrl = false
+                                })
                                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .focused($isFocusedUrl)
                                     .frame(maxWidth: .infinity)
                             }
                             VStack(spacing: 8){
@@ -106,14 +118,16 @@ struct ListView: View {
                                 }) {
                                     Text("Salvar")
                                         .foregroundColor(.blue)
-                                }.opacity(0)
+                                }
+                                .disabled(true)
+                                .opacity(0)
+                                
                                 Button(action: {
                                     flagNew = false
                                     chats.append(ChatsInfos(nameTitle: chatLabel, urlLink: chatUrl))
                                     managerData.save(chats: chats)
                                     chatLabel = ""
                                     chatUrl = ""
-                                    
                                 }) {
                                     Text("Salvar")
                                         .foregroundColor(.blue)
@@ -151,7 +165,6 @@ struct ListView: View {
                                 }
                                 .onTapGesture {
                                     openURLInExternalBrowser(chats[index].urlLink)
-                                    
                                 }
                                 Image(systemName: "ellipsis.circle")
                                     .foregroundColor(.secondary)
