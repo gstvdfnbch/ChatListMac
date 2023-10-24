@@ -15,6 +15,7 @@ struct ListView: View {
     
     @State private var showMenu = false
     @State private var selectedMenuIndex: Int?
+    @State private var selectedEdited: Int?
     
     @State private var chats: [ChatsInfos] = []
     
@@ -75,6 +76,7 @@ struct ListView: View {
     }
     
     func editLine(position: Int) {
+        selectedEdited = position
         print("edit")
     }
     
@@ -82,6 +84,7 @@ struct ListView: View {
         print("remove \(position)")
         self.chats.remove(at: position)
         managerData.save(chats: chats)
+        selectedEdited = -1
     }
     
     var body: some View {
@@ -101,6 +104,7 @@ struct ListView: View {
                         chatUrl = ""
                         chatLabel = ""
                         flagNew.toggle()
+                        selectedEdited = -1
                     }
                     
                     if flagNew {
@@ -129,6 +133,7 @@ struct ListView: View {
                                     managerData.save(chats: chats)
                                     chatLabel = ""
                                     chatUrl = ""
+                                    selectedEdited = -1
                                 }) {
                                     Text("Salvar")
                                         .foregroundColor(.blue)
@@ -147,25 +152,42 @@ struct ListView: View {
             
             VStack{
                 ScrollView (showsIndicators: false){
-                    VStack(spacing: 16){
+                    VStack(spacing: 8){
                         if chats.count != 0 {
                             ForEach(0..<chats.count, id: \.self) { index in
-                                HStack(spacing:8){
+                                HStack(spacing:4){
                                     VStack {
-                                        HStack{
-                                            Text(chats[index].nameTitle)
-                                                .font(.callout)
-                                            Spacer()
-                                        }
-                                        HStack{
-                                            Text(chats[index].urlLink)
-                                                .font(.callout)
-                                                .foregroundColor(.secondary)
-                                            Spacer()
+                                        if selectedEdited != index {
+                                            HStack{
+                                                Text(chats[index].nameTitle)
+                                                    .font(.callout)
+                                                Spacer()
+                                            }
+                                            HStack{
+                                                Text(chats[index].urlLink)
+                                                    .font(.callout)
+                                                    .foregroundColor(.secondary)
+                                                Spacer()
+                                            }
+                                        } else {
+                                            VStack (spacing: 4){
+                                                TextField(chats[index].nameTitle, text: $chats[index].nameTitle)
+                                                    .font(.callout)
+                                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                                    .underline(color: .blue)
+                                                
+                                                TextField(chats[index].urlLink, text: $chats[index].urlLink)
+                                                    .font(.callout)
+                                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                            }
                                         }
                                     }
                                     .onTapGesture {
-                                        openURLInExternalBrowser(chats[index].urlLink)
+                                        if selectedEdited != index {
+                                            openURLInExternalBrowser(chats[index].urlLink)
+                                        } else {
+                                            selectedEdited = -1
+                                        }
                                     }
                                     ZStack{
                                         Image(systemName: "ellipsis.circle")
