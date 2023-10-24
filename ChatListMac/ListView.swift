@@ -14,14 +14,15 @@ struct ListView: View {
     let paddingGSTV = 16
     
     @State private var showMenu = false
-
+    @State private var selectedMenuIndex: Int?
+    
     @State private var chats: [ChatsInfos] = []
     
     @State private var chatLabel = ""
     @State private var chatUrl = ""
     
     @FocusState private var isFocusedLabel: Bool
-    @FocusState private var isFocusedUrl: Bool    
+    @FocusState private var isFocusedUrl: Bool
     
     @State private var flagNew: Bool = false
     
@@ -73,6 +74,16 @@ struct ListView: View {
         }
     }
     
+    func editLine(position: Int) {
+        print("edit")
+    }
+    
+    func deleteLine(position: Int) {
+        print("remove \(position)")
+        self.chats.remove(at: position)
+        managerData.save(chats: chats)
+    }
+    
     var body: some View {
         VStack(spacing: 16){
             VStack{
@@ -80,7 +91,7 @@ struct ListView: View {
                     HStack{
                         Image(systemName: "plus.circle.fill")
                             .foregroundColor(.blue)
-                            
+                        
                         Text("Criar novo link")
                             .font(.title3)
                             .bold()
@@ -91,27 +102,17 @@ struct ListView: View {
                         chatLabel = ""
                         flagNew.toggle()
                     }
+                    
                     if flagNew {
                         HStack(spacing: 8){
                             VStack(spacing: 4){
                                 
-                                TextField("Título do site", text: $chatUrl, onCommit: {
-                                    isFocusedLabel = false
-                                    isFocusedUrl = true
-                                })
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .focused($isFocusedLabel)
-                                .frame(maxWidth: .infinity)
-                                
-                                
-                                
-                                TextField("Link completo", text: $chatLabel, onCommit: {
-                                    isFocusedLabel = true
-                                    isFocusedUrl = false
-                                })
+                                TextField("Título do site", text: $chatUrl)
                                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                                    .focused($isFocusedUrl)
-                                    .frame(maxWidth: .infinity)
+                                
+                                TextField("Link completo", text: $chatLabel)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                
                             }
                             VStack(spacing: 8){
                                 Button(action: {
@@ -139,52 +140,94 @@ struct ListView: View {
                     }
                 }
                 .padding(12)
-                    .cornerRadius(8)
+                .cornerRadius(8)
             }
             .background(.background)
             .cornerRadius(8)
             
-            
             VStack{
                 ScrollView (showsIndicators: false){
-                    VStack(spacing: 4){
-                        ForEach(0..<chats.count, id: \.self) { index in
-                            HStack(spacing:8){
-                                VStack {
-                                    HStack{
-                                        Text(chats[index].nameTitle)
-                                            .font(.callout)
-                                        Spacer()
+                    VStack(spacing: 16){
+                        if chats.count != 0 {
+                            ForEach(0..<chats.count, id: \.self) { index in
+                                HStack(spacing:8){
+                                    VStack {
+                                        HStack{
+                                            Text(chats[index].nameTitle)
+                                                .font(.callout)
+                                            Spacer()
+                                        }
+                                        HStack{
+                                            Text(chats[index].urlLink)
+                                                .font(.callout)
+                                                .foregroundColor(.secondary)
+                                            Spacer()
+                                        }
                                     }
-                                    HStack{
-                                        Text(chats[index].urlLink)
-                                            .font(.callout)
-                                            .foregroundColor(.secondary)
-                                        Spacer()
-                                    }
-                                }
-                                .onTapGesture {
-                                    openURLInExternalBrowser(chats[index].urlLink)
-                                }
-                                Image(systemName: "ellipsis.circle")
-                                    .foregroundColor(.secondary)
-                                    .onTapGesture {
-                                        showMenu.toggle()
-                                    }
-                                    .popover(isPresented: $showMenu, arrowEdge: .bottom, content: {
-                                        MenuView()
-                                    })
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.secondary)
                                     .onTapGesture {
                                         openURLInExternalBrowser(chats[index].urlLink)
                                     }
-
+                                    ZStack{
+                                        Image(systemName: "ellipsis.circle")
+                                            .foregroundColor(.secondary)
+                                            .padding(4)
+                                    }
+                                    .onTapGesture {
+                                        selectedMenuIndex = index
+                                    }
+                                    .popover(isPresented: Binding(get: { self.selectedMenuIndex == index }, set: { _ in }), arrowEdge: .bottom, content: {
+                                        VStack(spacing: 8) {
+                                            Button(action: {
+                                                editLine(position: index)
+                                            }) {
+                                                HStack{
+                                                    Image(systemName: "pencil")
+                                                        .font(.caption)
+                                                    Text("Editar")
+                                                        .font(.callout)
+                                                    Spacer()
+                                                }
+                                                .frame(width: 70)
+                                            }
+                                            .buttonStyle(.accessoryBar)
+                                            
+                                            Button(action: {
+                                                deleteLine(position: index)
+                                            }) {
+                                                HStack{
+                                                    Image(systemName: "trash")
+                                                        .font(.caption)
+                                                    Text("Apagar")
+                                                        .font(.callout)
+                                                    Spacer()
+                                                }
+                                                .frame(width: 70)
+                                                
+                                            }
+                                            .buttonStyle(.accessoryBar)
+                                        }
+                                        .padding(4)
+                                        .padding(.vertical, 4)
+                                    })
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(.secondary)
+                                        .onTapGesture {
+                                            openURLInExternalBrowser(chats[index].urlLink)
+                                        }
+                                }
+                                .padding(8)
+                                .background(Color.black.opacity(0.05))
+                                .cornerRadius(8)
+                                
                             }
-                            .padding(8)
-                            .background(Color.black.opacity(0.05))
-                            .cornerRadius(8)
-                            
+                        } else {
+                            HStack {
+                                Spacer()
+                                Text("Nenhum link adicionado")
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                            }
+                            .padding(.top, 32)
                         }
                     }
                 }
