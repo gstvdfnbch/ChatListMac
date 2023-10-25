@@ -15,12 +15,15 @@ struct ListView: View {
     
     @State private var showMenu = false
     @State private var selectedMenuIndex: Int?
-    @State private var selectedEdited: Int?
+    @State private var selectedEdited: Int = -1
     
     @State private var chats: [ChatsInfos] = []
     
-    @State private var chatLabel = ""
-    @State private var chatUrl = ""
+    @State private var chatLabelNew = ""
+    @State private var chatUrlNew = ""
+    @State private var chatLabelEdit = ""
+    @State private var chatUrlEdit = ""
+    
     
     @FocusState private var isFocusedLabel: Bool
     @FocusState private var isFocusedUrl: Bool
@@ -101,8 +104,8 @@ struct ListView: View {
                         Spacer()
                     }
                     .onTapGesture {
-                        chatUrl = ""
-                        chatLabel = ""
+                        chatUrlNew = ""
+                        chatLabelNew = ""
                         flagNew.toggle()
                         selectedEdited = -1
                     }
@@ -111,10 +114,10 @@ struct ListView: View {
                         HStack(spacing: 8){
                             VStack(spacing: 4){
                                 
-                                TextField("Título do site", text: $chatUrl)
+                                TextField("Título do site", text: $chatLabelNew)
                                     .textFieldStyle(RoundedBorderTextFieldStyle())
                                 
-                                TextField("Link completo", text: $chatLabel)
+                                TextField("Link completo", text: $chatUrlNew)
                                     .textFieldStyle(RoundedBorderTextFieldStyle())
                                 
                             }
@@ -129,10 +132,10 @@ struct ListView: View {
                                 
                                 Button(action: {
                                     flagNew = false
-                                    chats.append(ChatsInfos(nameTitle: chatLabel, urlLink: chatUrl))
+                                    chats.append(ChatsInfos(nameTitle: chatLabelNew, urlLink: chatUrlNew))
                                     managerData.save(chats: chats)
-                                    chatLabel = ""
-                                    chatUrl = ""
+                                    chatLabelNew = ""
+                                    chatUrlNew = ""
                                     selectedEdited = -1
                                 }) {
                                     Text("Salvar")
@@ -163,20 +166,26 @@ struct ListView: View {
                                                     .font(.callout)
                                                 Spacer()
                                             }
+                                            .onTapGesture {
+                                                openURLInExternalBrowser(chats[index].urlLink)
+                                            }
                                             HStack{
                                                 Text(chats[index].urlLink)
                                                     .font(.callout)
                                                     .foregroundColor(.secondary)
                                                 Spacer()
                                             }
+                                            .onTapGesture {
+                                                openURLInExternalBrowser(chats[index].urlLink)
+                                            }
                                         } else {
                                             VStack (spacing: 4){
-                                                TextField(chats[index].nameTitle, text: $chats[index].nameTitle)
+                                                TextField(chats[index].nameTitle, text: $chatLabelEdit)
                                                     .font(.callout)
                                                     .textFieldStyle(RoundedBorderTextFieldStyle())
                                                     .underline(color: .blue)
                                                 
-                                                TextField(chats[index].urlLink, text: $chats[index].urlLink)
+                                                TextField(chats[index].urlLink, text: $chatUrlEdit)
                                                     .font(.callout)
                                                     .textFieldStyle(RoundedBorderTextFieldStyle())
                                             }
@@ -189,48 +198,43 @@ struct ListView: View {
                                             selectedEdited = -1
                                         }
                                     }
-                                    ZStack{
-                                        Image(systemName: "ellipsis.circle")
-                                            .foregroundColor(.secondary)
-                                            .padding(4)
-                                    }
-                                    .onTapGesture {
-                                        selectedMenuIndex = index
-                                    }
-                                    .popover(isPresented: Binding(get: { self.selectedMenuIndex == index }, set: { _ in }), arrowEdge: .bottom, content: {
-                                        VStack(spacing: 8) {
-                                            Button(action: {
-                                                editLine(position: index)
-                                            }) {
-                                                HStack{
-                                                    Image(systemName: "pencil")
-                                                        .font(.caption)
-                                                    Text("Editar")
-                                                        .font(.callout)
-                                                    Spacer()
-                                                }
-                                                .frame(width: 70)
-                                            }
-                                            .buttonStyle(.accessoryBar)
-                                            
-                                            Button(action: {
-                                                deleteLine(position: index)
-                                            }) {
-                                                HStack{
-                                                    Image(systemName: "trash")
-                                                        .font(.caption)
-                                                    Text("Apagar")
-                                                        .font(.callout)
-                                                    Spacer()
-                                                }
-                                                .frame(width: 70)
-                                                
-                                            }
-                                            .buttonStyle(.accessoryBar)
+                                    if selectedEdited != index {
+                                        ZStack{
+                                            Image(systemName: "pencil")
+                                                .foregroundColor(.secondary)
+                                                .padding(4)
                                         }
-                                        .padding(4)
-                                        .padding(.vertical, 4)
-                                    })
+                                        .onTapGesture {
+                                            selectedMenuIndex = index
+                                            editLine(position: index)
+                                        }
+                                        ZStack{
+                                            Image(systemName: "trash")
+                                                .foregroundColor(.secondary)
+                                                .padding(4)
+                                        }
+                                        .onTapGesture {
+                                            selectedMenuIndex = index
+                                            deleteLine(position: index)
+                                        }
+                                    } else {
+                                        VStack{
+                                            Spacer()
+                                            Button(action: {
+                                                flagNew = false
+                                                chats[selectedEdited] = ChatsInfos(nameTitle: chatLabelEdit, urlLink: chatUrlEdit)
+                                                managerData.save(chats: chats)
+                                                selectedEdited = -1
+                                            }) {
+                                                Text("Salvar")
+                                                    .foregroundColor(.blue)
+                                            }
+                                        }
+                                        .onTapGesture {
+                                            selectedMenuIndex = index
+                                            deleteLine(position: index)
+                                        }
+                                    }
                                     Image(systemName: "chevron.right")
                                         .foregroundColor(.secondary)
                                         .onTapGesture {
